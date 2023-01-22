@@ -28,6 +28,7 @@ public class NestedApiController {
             return new ResponseEntity<String>(response.body(), HttpStatus.valueOf(200));
         }
         else {
+            // If get request for catfact api fails, return error message and code
             return new ResponseEntity<String>(response.body(), HttpStatus.valueOf(response.statusCode()));
         }
     }
