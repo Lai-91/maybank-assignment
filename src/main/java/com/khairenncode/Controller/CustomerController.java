@@ -5,6 +5,8 @@ import com.khairenncode.model.Customer;
 import com.khairenncode.repository.CustomerRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,14 +21,24 @@ public class CustomerController {
     private CustomerRepository customerRepository;
 
     @GetMapping("/customers")
-    public List<Customer> getAllCustomers() {
-        return customerRepository.findAll();
+    public List<Customer> getAllCustomers(@RequestParam(value = "page", required = false) Integer page) {
+        // If no page number is specified (pagination not needed)
+        int pageSize = (int) customerRepository.count(); // Get all customer records in one page
+        int pageNumber = 0; // Get first page
+
+        // If page number is specified (pagination)
+        if (!(page == null)) {
+            pageSize = 10;
+            pageNumber = page; // Return the page that is specified in parameter
+        }
+        Pageable paging = PageRequest.of(pageNumber, pageSize);
+        return customerRepository.findAll(paging).getContent();
     }
 
-    @GetMapping("/customers/{id}")
-    public ResponseEntity<Customer> getCustomerById(@PathVariable(value = "id") String customerId) throws ResourceNotFoundException {
-        Customer customer = customerRepository.findById(customerId).orElseThrow(() ->
-                new ResourceNotFoundException("Customer not found for this id :: " + customerId));
+    @GetMapping("/customers/{icNumber}")
+    public ResponseEntity<Customer> getCustomerById(@PathVariable(value = "icNumber") String customerIC) throws ResourceNotFoundException {
+        Customer customer = customerRepository.findById(customerIC).orElseThrow(() ->
+                new ResourceNotFoundException("Customer with this IC number. not found :: " + customerIC));
         return ResponseEntity.ok().body(customer);
     }
 
@@ -35,10 +47,10 @@ public class CustomerController {
         return customerRepository.save(customer);
     }
 
-    @PutMapping("/customers/{id}")
-    public ResponseEntity<Customer> updateCustomer(@PathVariable(value = "id") String customerId, @Valid @RequestBody Customer customerDetails) throws ResourceNotFoundException {
-        Customer customer = customerRepository.findById(customerId).orElseThrow(() ->
-                new ResourceNotFoundException("Customer not found for this id : " + customerId));
+    @PutMapping("/customers/{icNumber}")
+    public ResponseEntity<Customer> updateCustomer(@PathVariable(value = "icNumber") String customerIC, @Valid @RequestBody Customer customerDetails) throws ResourceNotFoundException {
+        Customer customer = customerRepository.findById(customerIC).orElseThrow(() ->
+                new ResourceNotFoundException("Customer with this IC number. not found :: " + customerIC));
 
         customer.setIcNumber(customerDetails.getIcNumber());
         customer.setLastname(customerDetails.getLastname());
@@ -47,10 +59,10 @@ public class CustomerController {
         return ResponseEntity.ok(updatedCustomer);
     }
 
-    @DeleteMapping("/customers/{id}")
-    public Map<String, Boolean> deleteEmployee(@PathVariable(value = "id") String customerId) throws ResourceNotFoundException {
-        Customer customer = customerRepository.findById(customerId).orElseThrow(() ->
-                new ResourceNotFoundException("Customer not found for this id :: " + customerId));
+    @DeleteMapping("/customers/{icNumber}")
+    public Map<String, Boolean> deleteEmployee(@PathVariable(value = "icNumber") String customerIC) throws ResourceNotFoundException {
+        Customer customer = customerRepository.findById(customerIC).orElseThrow(() ->
+                new ResourceNotFoundException("Customer with this IC number. not found :: " + customerIC));
 
         customerRepository.delete(customer);
         Map<String, Boolean> response = new HashMap<>();
