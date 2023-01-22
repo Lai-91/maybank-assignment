@@ -1,16 +1,14 @@
-package com.khairenncode.Model;
+package com.khairenncode.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "Customers")
 public class Customer {
-    private Long icNumber;
+    private String icNumber;
     private String lastname;
     private String firstname;
     private String dob;
@@ -18,7 +16,7 @@ public class Customer {
     public Customer() {
     }
 
-    public Customer(Long icNumber, String lastname, String firstname, String dob) {
+    public Customer(String icNumber, String lastname, String firstname, String dob) {
         this.icNumber = icNumber;
         this.lastname = lastname;
         this.firstname = firstname;
@@ -27,11 +25,11 @@ public class Customer {
 
     @Id
     @Column(name = "icNumber", nullable = false)
-    public Long getIcNumber() {
+    public String getIcNumber() {
         return icNumber;
     }
 
-    public void setIcNumber(Long icNumber) {
+    public void setIcNumber(String icNumber) {
         this.icNumber = icNumber;
     }
 

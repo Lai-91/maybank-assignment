@@ -1,8 +1,8 @@
-package com.khairenncode.Controller;
+package com.khairenncode.controller;
 
 import com.khairenncode.Exception.ResourceNotFoundException;
-import com.khairenncode.Model.Customer;
-import com.khairenncode.Repository.CustomerRepository;
+import com.khairenncode.model.Customer;
+import com.khairenncode.repository.CustomerRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,10 +24,9 @@ public class CustomerController {
     }
 
     @GetMapping("/customers/{id}")
-    public ResponseEntity<Customer> getCustomerById(@PathVariable(value = "id") Long customerId)
-            throws ResourceNotFoundException {
-        Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new ResourceNotFoundException("Customer not found for this id :: " + customerId));
+    public ResponseEntity<Customer> getCustomerById(@PathVariable(value = "id") String customerId) throws ResourceNotFoundException {
+        Customer customer = customerRepository.findById(customerId).orElseThrow(() ->
+                new ResourceNotFoundException("Customer not found for this id :: " + customerId));
         return ResponseEntity.ok().body(customer);
     }
 
@@ -37,10 +36,9 @@ public class CustomerController {
     }
 
     @PutMapping("/customers/{id}")
-    public ResponseEntity<Customer> updateCustomer(@PathVariable(value = "id") Long customerId,
-                                                   @Valid @RequestBody Customer customerDetails) throws ResourceNotFoundException {
-        Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new ResourceNotFoundException("Employee not found for this id : " + customerId));
+    public ResponseEntity<Customer> updateCustomer(@PathVariable(value = "id") String customerId, @Valid @RequestBody Customer customerDetails) throws ResourceNotFoundException {
+        Customer customer = customerRepository.findById(customerId).orElseThrow(() ->
+                new ResourceNotFoundException("Customer not found for this id : " + customerId));
 
         customer.setIcNumber(customerDetails.getIcNumber());
         customer.setLastname(customerDetails.getLastname());
@@ -50,10 +48,9 @@ public class CustomerController {
     }
 
     @DeleteMapping("/customers/{id}")
-    public Map<String, Boolean> deleteEmployee(@PathVariable(value = "id") Long customerId)
-            throws ResourceNotFoundException {
-        Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new ResourceNotFoundException("Employee not found for this id :: " + customerId));
+    public Map<String, Boolean> deleteEmployee(@PathVariable(value = "id") String customerId) throws ResourceNotFoundException {
+        Customer customer = customerRepository.findById(customerId).orElseThrow(() ->
+                new ResourceNotFoundException("Customer not found for this id :: " + customerId));
 
         customerRepository.delete(customer);
         Map<String, Boolean> response = new HashMap<>();

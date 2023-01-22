@@ -43,11 +43,6 @@
 			<artifactId>mssql-jdbc</artifactId>
 		</dependency>
 
-<!--		<dependency>-->
-<!--			<groupId>net.sourceforge.jtds</groupId>-->
-<!--			<artifactId>jtds</artifactId>-->
-<!--		</dependency>-->
-
 		<dependency>
 			<groupId>jakarta.persistence</groupId>
 			<artifactId>jakarta.persistence-api</artifactId>
